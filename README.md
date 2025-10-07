@@ -124,21 +124,6 @@ and temporal stability while discouraging extreme lookback values.  This makes
 it straightforward to plug the simulator into frameworks such as
 Stable-Baselines3 or RLlib.
 
-### Training a baseline PPO agent
-
-The repository ships with a convenience script powered by Stable-Baselines3
-that constructs the environment, preprocesses the sample dataset and trains a
-PPO agent out of the box. The example below stores checkpoints in
-`rl_checkpoints/` and writes tensorboard logs under `tensorboard_logs/`:
-
-```bash
-pip install stable-baselines3
-python scripts/train_leadlag_agent.py --total-timesteps 50000 --learning-rate 1e-4
-```
-
-Use `--config` to pass a JSON file with custom `LeadLagConfig` parameters or
-`--reward-weights` to rebalance the composite reward. Check `python
-scripts/train_leadlag_agent.py --help` for the full list of options.
 
 ## License
 
