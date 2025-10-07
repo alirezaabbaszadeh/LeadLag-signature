@@ -10,7 +10,8 @@ leader–follower scores.
 
 ```
 ├── models/
-│   └── LeadLag_main.py        # LeadLagAnalyzer implementation and configuration helpers
+│   ├── LeadLag_main.py        # LeadLagAnalyzer implementation and configuration helpers
+│   └── leadlag_rl_env.py      # Gym environment for adaptive lookback selection
 ├── notebooks/
 │   └── LeadLag_signature.ipynb  # Example workflow that orchestrates preprocessing and analysis
 ├── preprocessing_data/
@@ -91,6 +92,37 @@ leaders = analyzer.leader_follower_detector(lead_lag_matrix, {
 The `raw_data/` folder contains sample CSV files (prices, volumes, and universe definitions)
 that make the notebook reproducible. Replace these with your proprietary data if needed. Make
 sure that price files use a `date` column that can be parsed into a `DatetimeIndex`.
+
+## Reinforcement-learning environment
+
+The module `models/leadlag_rl_env.py` exposes a Gym-compatible environment that
+lets an RL agent learn how to adapt the lookback window dynamically while
+reusing the existing analysis code.
+
+```python
+from models.leadlag_rl_env import LeadLagEnv, RewardWeights
+from models.LeadLag_main import LeadLagConfig
+import pandas as pd
+
+prices = pd.read_csv("raw_data/1H_prices_20250811.csv", index_col="date", parse_dates=True)
+
+config = LeadLagConfig(lag=1, lookback=30, update_freq=1, use_parallel=False)
+env = LeadLagEnv(
+    price_data=prices,
+    config=config,
+    lookback_range=(5, 120),
+    reward_weights=RewardWeights(signal=1.0, stability=0.5, extremity=0.05),
+)
+
+observation, _ = env.reset()
+observation, reward, terminated, truncated, info = env.step(env.action_space.sample())
+```
+
+The environment provides a compact observation vector (row sums, extremes and
+signal intensity) together with a composite reward that balances signal strength
+and temporal stability while discouraging extreme lookback values.  This makes
+it straightforward to plug the simulator into frameworks such as
+Stable-Baselines3 or RLlib.
 
 ## License
 
