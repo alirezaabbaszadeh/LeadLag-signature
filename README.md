@@ -124,7 +124,6 @@ and temporal stability while discouraging extreme lookback values.  This makes
 it straightforward to plug the simulator into frameworks such as
 Stable-Baselines3 or RLlib.
 
-
 ## License
 
 The project inherits the license of this repository. If none is specified, treat the content as
