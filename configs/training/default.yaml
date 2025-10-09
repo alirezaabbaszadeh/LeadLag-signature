@@ -1,0 +1,6 @@
+# Global training settings.
+total_timesteps: 100000
+output_dir: results/checkpoints
+checkpoint_name: ppo_leadlag
+log_interval: 10
+dry_run: false
