@@ -1,0 +1,8 @@
+# Default configuration for the adaptive lead-lag RL pipeline.
+
+defaults:
+  - data: local_csv
+  - env: leadlag_env
+  - agent: ppo
+  - training: default
+
