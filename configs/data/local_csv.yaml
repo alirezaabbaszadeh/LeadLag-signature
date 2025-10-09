@@ -1,3 +1,0 @@
-# Paths to the input datasets used by the training pipeline.
-price_path: data/processed/prices.csv
-universe_path: null
