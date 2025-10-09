@@ -594,15 +594,16 @@ The following blueprint refines and standardizes the previously drafted 100 acti
 3. Unit test failure scenarios to ensure predictable behavior.
 **Deliverables:** Resilient environment/analyzer with documented error policies.
 
-## Action Plan 60 – Deterministic Evaluation Mode
-**Objective:** Ensure evaluation runs yield identical trajectories when seeded.
-**Rationale:** Facilitates qualitative analysis and regression testing.
-**Prerequisites:** Environment seeding supported; deterministic policy wrapper available.
+## Action Plan 60 – Deterministic Evaluation & Policy Wrapper
+**Objective:** Guarantee seeded evaluation runs produce reproducible trajectories via a deterministic policy wrapper.
+**Rationale:** Deterministic rollouts are essential for qualitative analysis, regression testing, and fair comparisons against baselines.
+**Prerequisites:** Environment and evaluation scripts support global seeding; evaluation CLI scaffolding exists.
 **Implementation Steps:**
-1. Add CLI flag `--seed` to evaluation script; propagate to environment, numpy, torch, random.
-2. Implement deterministic policy wrapper selecting mean/argmax actions during evaluation if requested.
-3. Save action sequences and rewards for reproducibility.
-**Deliverables:** Deterministic evaluation logs enabling exact reproduction of results.
+1. Add a `--seed` flag to the evaluation entry point and propagate it to the environment, NumPy, PyTorch, and Python’s `random` module.
+2. Implement a deterministic policy wrapper that converts stochastic policy outputs into mean/argmax actions depending on the action space.
+3. Integrate the wrapper behind a `--deterministic` evaluation toggle and ensure logging captures whether deterministic mode is active.
+4. Persist action sequences, rewards, and configuration metadata to enable exact reruns.
+**Deliverables:** Deterministic evaluation pipeline with policy wrapper integration, saved trajectories, and reproducibility documentation.
 
 ## Action Plan 61 – Baseline Strategy Suite
 **Objective:** Establish non-RL baselines (fixed lookbacks, heuristics) for fair comparisons.
@@ -733,16 +734,6 @@ The following blueprint refines and standardizes the previously drafted 100 acti
 2. Validate exports by running inference tests comparing outputs to original policy.
 3. Document deployment instructions and limitations.
 **Deliverables:** Export scripts with example artifacts stored under `results/exports/`.
-
-## Action Plan 74 – Deterministic Policy Wrapper for Evaluation
-**Objective:** Provide a wrapper enforcing deterministic action selection during evaluation.
-**Rationale:** Required for fair comparison and reproducible backtests.
-**Prerequisites:** Policy outputs stochastic distribution; evaluation script modular.
-**Implementation Steps:**
-1. Implement wrapper returning mean or argmax actions (depending on discrete/continuous space).
-2. Integrate with evaluation CLI (`--deterministic` flag).
-3. Compare deterministic vs. stochastic metrics and log differences.
-**Deliverables:** Deterministic evaluation capability integrated into pipeline.
 
 ## Action Plan 75 – Lookback Change Rate Limiting
 **Objective:** Restrict lookback adjustments per step to mimic realistic operational constraints.
